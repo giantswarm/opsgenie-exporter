@@ -1,86 +1,117 @@
 package main
 
 import (
-	"flag"
+	"context"
 	"fmt"
 
-	"github.com/giantswarm/exporterkit"
-	"github.com/giantswarm/exporterkit/collector"
+	"github.com/giantswarm/microerror"
+	"github.com/giantswarm/microkit/command"
+	microserver "github.com/giantswarm/microkit/server"
 	"github.com/giantswarm/micrologger"
-	"github.com/giantswarm/opsgenie-exporter/alert"
-	"github.com/giantswarm/opsgenie-exporter/opsgenie"
-	"github.com/prometheus/client_golang/prometheus"
+	"github.com/spf13/viper"
+
+	"github.com/giantswarm/opsgenie-exporter/flag"
+	"github.com/giantswarm/opsgenie-exporter/server"
+	"github.com/giantswarm/opsgenie-exporter/service"
+)
+
+var (
+	description string     = "The opsgenie-exporter exports Opsgenie data as Prometheus metrics."
+	f           *flag.Flag = flag.New()
+	gitCommit   string     = "n/a"
+	name        string     = "opsgenie-exporter"
+	source      string     = "https://github.com/giantswarm/opsgenie-exporter"
 )
 
 func main() {
+	err := mainError()
+	if err != nil {
+		panic(fmt.Sprintf("%#v\n", err))
+	}
+}
+
+func mainError() error {
 	var err error
 
-	opsgenieApiKey := flag.String("api-key", "", "Opsgenie API key")
-	flag.Parse()
-
-	var logger micrologger.Logger
+	// Create a new logger which is used by all packages.
+	var newLogger micrologger.Logger
 	{
 		c := micrologger.Config{}
 
-		logger, err = micrologger.New(c)
+		newLogger, err = micrologger.New(c)
 		if err != nil {
-			panic(fmt.Sprintf("%#v\n", err))
+			return microerror.Mask(err)
 		}
 	}
 
-	var opsgenieClient *opsgenie.Client
+	// We define a server factory to create the custom server once all command
+	// line flags are parsed and all microservice configuration is storted out.
+	newServerFactory := func(v *viper.Viper) microserver.Server {
+		// Create a new custom service which implements business logic.
+		var newService *service.Service
+		{
+			c := service.Config{
+				Logger: newLogger,
+
+				Description: description,
+				Flag:        f,
+				GitCommit:   gitCommit,
+				ProjectName: name,
+				Source:      source,
+				Viper:       v,
+			}
+
+			newService, err = service.New(c)
+			if err != nil {
+				panic(fmt.Sprintf("%#v", err))
+			}
+			go newService.Boot(context.Background())
+		}
+
+		// Create a new custom server which bundles our endpoints.
+		var newServer microserver.Server
+		{
+			c := server.Config{
+				Logger:  newLogger,
+				Service: newService,
+				Viper:   v,
+
+				ProjectName: name,
+			}
+
+			newServer, err = server.New(c)
+			if err != nil {
+				panic(fmt.Sprintf("%#v", err))
+			}
+		}
+
+		return newServer
+	}
+
+	// Create a new microkit command which manages our custom microservice.
+	var newCommand command.Command
 	{
-		c := opsgenie.Config{
-			Key: *opsgenieApiKey,
+		c := command.Config{
+			Logger:        newLogger,
+			ServerFactory: newServerFactory,
+
+			Description: description,
+			GitCommit:   gitCommit,
+			Name:        name,
+			Source:      source,
 		}
 
-		opsgenieClient, err = opsgenie.New(c)
+		newCommand, err = command.New(c)
 		if err != nil {
-			panic(fmt.Sprintf("%#v\n", err))
+			return microerror.Mask(err)
 		}
 	}
 
-	var alertCollector collector.Interface
-	{
-		c := alert.Config{
-			Client: opsgenieClient,
-		}
+	daemonCommand := newCommand.DaemonCommand().CobraCommand()
 
-		alertCollector, err = alert.New(c)
-		if err != nil {
-			panic(fmt.Sprintf("%#v\n", err))
-		}
-	}
+	daemonCommand.PersistentFlags().String(f.Service.Opsgenie.API.Token, "", "Auth token to access the Opsgenie API.")
 
-	var collectorSet *collector.Set
-	{
-		c := collector.SetConfig{
-			Collectors: []collector.Interface{
-				alertCollector,
-			},
-			Logger: logger,
-		}
+	newCommand.CobraCommand().Execute()
 
-		collectorSet, err = collector.NewSet(c)
-		if err != nil {
-			panic(fmt.Sprintf("%#v\n", err))
-		}
-	}
-
-	var exporter *exporterkit.Exporter
-	{
-		c := exporterkit.Config{
-			Collectors: []prometheus.Collector{
-				collectorSet,
-			},
-			Logger: logger,
-		}
-
-		exporter, err = exporterkit.New(c)
-		if err != nil {
-			panic(fmt.Sprintf("%#v\n", err))
-		}
-	}
-
-	exporter.Run()
+	return nil
 }
