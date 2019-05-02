@@ -10,6 +10,14 @@
   revision = "3a771d992973f24aa725d07868b467d1ddfceafb"
 
 [[projects]]
+  digest = "1:0ef770954bca104ee99b3b6b7f9b240605ac03517d9f98cbc1893daa03f3c038"
+  name = "github.com/coreos/go-semver"
+  packages = ["semver"]
+  pruneopts = "UT"
+  revision = "8ab6407b697782a06568d4b7f1db25550ec2e4c6"
+  version = "v0.2.0"
+
+[[projects]]
   digest = "1:abeb38ade3f32a92943e5be54f55ed6d6e3b6602761d74b4aab4c9dd45c18abd"
   name = "github.com/fsnotify/fsnotify"
   packages = ["."]
@@ -19,22 +27,21 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:ac7edbf7d9dfac78ceb35136e85e8e43ace4d28d470fd90f93223568c8420b51"
+  digest = "1:5164d17414266145c643e4997dacbc32e6e1ad552c3c70a78837f64d9a0140ea"
   name = "github.com/giantswarm/exporterkit"
-  packages = [
-    ".",
-    "collector",
-  ]
+  packages = ["collector"]
   pruneopts = "UT"
-  revision = "a60dbc99e177d2c5cb847c65dd60ecb1eca4796f"
+  revision = "3c367b3fab44e69ff2657b7ba61ac7eb93f8c86b"
 
 [[projects]]
   branch = "master"
-  digest = "1:bcf7cab60e36c24a5f655b723befdff105cef16c0c95b23e1c6da0d33d4c900c"
+  digest = "1:b7f7982da706514dcb15a2d9211d932efb654c33d4ac105d552ae1981702dad4"
   name = "github.com/giantswarm/microendpoint"
   packages = [
     "endpoint/healthz",
+    "endpoint/version",
     "service/healthz",
+    "service/version",
   ]
   pruneopts = "UT"
   revision = "f77c569259aef9cea5e38d0d7d94bf1d7d07d136"
@@ -49,9 +56,21 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:dc43c3034dff1eec3b2f0d1a499e241df1afb88e7c25138ba16a818c7246ba94"
+  digest = "1:e84b052d9547d99b68c1e7555404f9c1934cce841011dc5c72504b4bc9566097"
   name = "github.com/giantswarm/microkit"
   packages = [
+    "command",
+    "command/daemon",
+    "command/daemon/flag",
+    "command/daemon/flag/config",
+    "command/daemon/flag/server",
+    "command/daemon/flag/server/enable",
+    "command/daemon/flag/server/enable/debug",
+    "command/daemon/flag/server/listen",
+    "command/daemon/flag/server/log",
+    "command/daemon/flag/server/tls",
+    "command/version",
+    "flag",
     "server",
     "tls",
   ]
@@ -68,6 +87,14 @@
   ]
   pruneopts = "UT"
   revision = "22dc3b5565d150e1f94fbed50df3baf6cd40fac9"
+
+[[projects]]
+  branch = "master"
+  digest = "1:c4b6fa60c419ae7d310e04ed2e37f38e685847416e193a5f5ce97ff81fe00443"
+  name = "github.com/giantswarm/versionbundle"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "c91a5899eae8867e7966df734f4cccbba450c841"
 
 [[projects]]
   digest = "1:83a37f3bd4ccd13469775ef771e943e6c7cfaba6926decff6c83135e56512f08"
@@ -139,6 +166,14 @@
   pruneopts = "UT"
   revision = "8cb6e5b959231cc1119e43259c4a608f9c51a241"
   version = "v1.0.0"
+
+[[projects]]
+  digest = "1:870d441fe217b8e689d7949fef6e43efbc787e50f200cb1e70dbca9204a1d6be"
+  name = "github.com/inconshreveable/mousetrap"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
+  version = "v1.0"
 
 [[projects]]
   branch = "master"
@@ -253,6 +288,14 @@
   version = "v1.3.0"
 
 [[projects]]
+  digest = "1:645cabccbb4fa8aab25a956cbcbdf6a6845ca736b2c64e197ca7cbb9d210b939"
+  name = "github.com/spf13/cobra"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "ef82de70bb3f60c65fb8eebacbb2d122ef517385"
+  version = "v0.0.3"
+
+[[projects]]
   digest = "1:68ea4e23713989dc20b1bded5d9da2c5f9be14ff9885beef481848edd18c26cb"
   name = "github.com/spf13/jwalterweatherman"
   packages = ["."]
@@ -278,6 +321,25 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:6b32e89d721bcc3f5ad131f7ea1c4926ecf2c49225feff288a1d2e9fd86c1bd3"
+  name = "golang.org/x/net"
+  packages = [
+    "idna",
+    "publicsuffix",
+  ]
+  pruneopts = "UT"
+  revision = "9ce7a6920f093fc0b908c4a5f66ae049110f417e"
+
+[[projects]]
+  branch = "master"
+  digest = "1:b521f10a2d8fa85c04a8ef4e62f2d1e14d303599a55d64dabf9f5a02f84d35eb"
+  name = "golang.org/x/sync"
+  packages = ["errgroup"]
+  pruneopts = "UT"
+  revision = "112230192c580c3556b8cee6403af37a4fc5f28c"
+
+[[projects]]
+  branch = "master"
   digest = "1:225564f71149334315118db714e1ea87513e4a11cf4acb27e26bc7577cebfa0b"
   name = "golang.org/x/sys"
   packages = ["unix"]
@@ -285,36 +347,60 @@
   revision = "62eef0e2fa9b2c385f7b2778e763486da6880d37"
 
 [[projects]]
-  digest = "1:8029e9743749d4be5bc9f7d42ea1659471767860f0cdc34d37c3111bd308a295"
+  digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
   name = "golang.org/x/text"
   packages = [
+    "collate",
+    "collate/build",
+    "internal/colltab",
     "internal/gen",
+    "internal/tag",
     "internal/triegen",
     "internal/ucd",
+    "language",
+    "secure/bidirule",
     "transform",
+    "unicode/bidi",
     "unicode/cldr",
     "unicode/norm",
+    "unicode/rangetable",
   ]
   pruneopts = "UT"
   revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
   version = "v0.3.0"
 
 [[projects]]
-  digest = "1:342378ac4dcb378a5448dd723f0784ae519383532f5e70ade24132c4c8693202"
+  digest = "1:41206f4d0410803e64cfb203f665330c3183988408cb532b56305a816a87bd99"
+  name = "gopkg.in/resty.v1"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "fa5875c0caa5c260ab78acec5a244215a730247f"
+  version = "v1.12.0"
+
+[[projects]]
+  branch = "v2"
+  digest = "1:2d56cd111a870bdf3ee37601877effe1fc79b8983645c147846f4769b6eb7051"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
   pruneopts = "UT"
-  revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
-  version = "v2.2.1"
+  revision = "7b8349ac747c6a24702b762d2c4fd9266cf4f1d6"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/giantswarm/exporterkit",
     "github.com/giantswarm/exporterkit/collector",
+    "github.com/giantswarm/microendpoint/endpoint/healthz",
+    "github.com/giantswarm/microendpoint/endpoint/version",
+    "github.com/giantswarm/microendpoint/service/version",
+    "github.com/giantswarm/microerror",
+    "github.com/giantswarm/microkit/command",
+    "github.com/giantswarm/microkit/flag",
+    "github.com/giantswarm/microkit/server",
     "github.com/giantswarm/micrologger",
     "github.com/prometheus/client_golang/prometheus",
+    "github.com/spf13/viper",
+    "golang.org/x/sync/errgroup",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
