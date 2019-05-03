@@ -2,9 +2,10 @@ package alert
 
 import (
 	"github.com/giantswarm/microerror"
-	"github.com/giantswarm/opsgenie-exporter/service/collector/opsgenie"
 	"github.com/prometheus/client_golang/prometheus"
 	"golang.org/x/sync/errgroup"
+
+	"github.com/giantswarm/opsgenie-exporter/service/collector/opsgenie"
 )
 
 const (
